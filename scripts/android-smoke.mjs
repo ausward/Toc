@@ -119,14 +119,10 @@ try {
   // Back from the home screen closes the app.
   await back()
   await sleep(2500)
-  // pidof exits with an error when there is no such process, which is what closing the app should leave.
-  let alive = true
-  try {
-    alive = adb('shell', 'pidof', PKG).trim() !== ''
-  } catch {
-    alive = false
-  }
-  check('back from the home screen closes the app', !alive)
+  // "Closed" means the app has left the screen, with the launcher or home screen in front. Android may keep
+  // the finished app's process cached for a while, so whether the process is gone says nothing about that.
+  const front = focus()
+  check('back from the home screen closes the app (it leaves the screen)', !front.includes(PKG), front.trim().slice(0, 160))
   await device.close().catch(() => {})
 } catch (error) {
   check('the run finished without an error', false, String(error?.stack ?? error).slice(0, 600))
