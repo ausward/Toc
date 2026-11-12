@@ -35,6 +35,7 @@ import { LevelScreen } from './ui/LevelScreen.tsx'
 import { LoadingLab } from './ui/LoadingLab.tsx'
 import { PlayerBar } from './ui/PlayerBar.tsx'
 import type { Guide } from './ui/types.ts'
+import { useAndroidBack } from './ui/useAndroidBack.ts'
 
 // The instructor's screen loads only on a device that hosts a class, and the guides and the exam (with
 // its bank of questions) only when opened.
@@ -132,6 +133,18 @@ export default function App() {
     setHosting(null)
     setHostView(false)
   }
+
+  // The Android app's back button steps out of whichever screen is open, and closes the app from home.
+  useAndroidBack(() => {
+    if (hosting && hostView) setHostView(false)
+    else if (guide) setGuide(null)
+    else if (lab) setLab(false)
+    else if (mine) setMine(false)
+    else if (free) setFree(false)
+    else if (open) setOpen(null)
+    else return false
+    return true
+  })
 
   let screen: ReactNode
   if (HostClass && hosting && hostView) {
