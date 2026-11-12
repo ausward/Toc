@@ -5290,3 +5290,14 @@ p.exam-taught,
 .screen.my-factory {
   max-width: none;
 }
+
+/* The Play edition's first-visit card on the home screen. */
+.start-here {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: start;
+}
+.start-here h2,
+.start-here p {
+  margin: 0;
+}

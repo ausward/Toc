@@ -3,6 +3,7 @@ import { levelState, maxStars, tierParents } from '../levels/graph.ts'
 import { principleNames } from '../levels/principles.ts'
 import type { Level } from '../levels/types.ts'
 import type { Preferences } from '../progress/store.ts'
+import { levelNumber } from '../course/numbering.ts'
 import { PLAY } from '../edition.ts'
 import { FullScreenButton } from './FullScreen.tsx'
 import { Icon } from './icons.tsx'
@@ -65,6 +66,18 @@ export function LevelList(props: LevelListProps) {
       </nav>
       {player}
       {classCards}
+      {PLAY && completed.size === 0 && (
+        <section className="card start-here" aria-labelledby="start-here-title">
+          <h2 id="start-here-title">New here? Start here</h2>
+          <p>
+            Every factory has one step that holds everything back. In the first level you find it, then make the whole line flow.
+            It takes a few minutes, and you can't lose: every run is explained, and you can try again as often as you like.
+          </p>
+          <button className="btn primary big" onClick={() => onOpen(levels[0])}>
+            Start level {levelNumber(levels[0])} <Icon name="next" />
+          </button>
+        </section>
+      )}
       <ProgressMap levels={levels} tierNames={tierNames} completed={completed} stars={stars} />
       <button className="level-card free lab" onClick={onLab}>
         <span className="level-number">
