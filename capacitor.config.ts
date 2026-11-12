@@ -4,7 +4,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
 // The app id is the app's permanent name on Google Play: it can't change once an upload is published.
 const config: CapacitorConfig = {
   appId: 'com.tocfactory.game',
-  appName: 'TOC Factory',
+  appName: 'Factory Fun',
   webDir: 'dist-play',
   backgroundColor: '#fff7e6',
   android: {

@@ -4,6 +4,13 @@ The Android app is the **Play Store edition** of the game (`CLAUDE.md`, `src/edi
 Capacitor. It plays offline from files inside the app. Nothing a learner enters leaves the device: there is
 no class mode, no account, no analytics, and no ads.
 
+## Name
+
+The app is called **Factory Fun** (home-screen label and in the game, `GAME_NAME` in `src/edition.ts`); the web
+game stays **TOC Factory**. Play's title can be longer and say what it teaches, up to 30 characters, for
+example **Factory Fun: Learn Bottlenecks** (30) or **Factory Fun: Theory of Constraints** (too long: use
+the description for that). Check the name is free in Play Console and that it doesn't copy someone's brand.
+
 ## What is built and what is left
 
 Built: the edition, the Android project (`android/`), icons and splash, the back button, native sharing of

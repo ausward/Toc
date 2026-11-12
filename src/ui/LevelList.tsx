@@ -4,7 +4,7 @@ import { principleNames } from '../levels/principles.ts'
 import type { Level } from '../levels/types.ts'
 import type { Preferences } from '../progress/store.ts'
 import { levelNumber } from '../course/numbering.ts'
-import { PLAY } from '../edition.ts'
+import { GAME_NAME, PLAY } from '../edition.ts'
 import { FullScreenButton } from './FullScreen.tsx'
 import { Icon } from './icons.tsx'
 import { Stars } from './parts.tsx'
@@ -42,10 +42,11 @@ export function LevelList(props: LevelListProps) {
     <div className="screen home">
       <header className="hero">
         <div className="hero-top">
-          <h1>TOC Factory</h1>
+          <h1>{GAME_NAME}</h1>
           {!PLAY && <FullScreenButton />}
         </div>
         <p>
+          {PLAY && <strong>Learn the Theory of Constraints by running a factory. </strong>}
           Run a toy robot factory, a candle workshop, a print shop, and a bakery with its own shop. Find the step that holds
           everything back, make the whole line flow, and keep it flowing through breakdowns, late trucks, rush orders, and
           forecasts that are always wrong.

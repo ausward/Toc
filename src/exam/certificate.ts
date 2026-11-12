@@ -1,3 +1,4 @@
+import { GAME_NAME } from '../edition.ts'
 import { EXAM } from './config.ts'
 import { NAME_MAX, type CertificateRecord } from './record.ts'
 import { percentOf } from './rules.ts'
@@ -52,16 +53,16 @@ export function formatDate(at: string): string {
 // Every line printed on a certificate, in words, so the drawing and the tests agree on what it says.
 export function certificateText(c: CertificateRecord) {
   return {
-    brand: 'TOC FACTORY',
+    brand: GAME_NAME.toUpperCase(),
     title: 'Certificate of Completion',
     intro: 'This certifies that',
     name: c.name,
-    body: ['has successfully completed the TOC Factory training', 'on the Theory of Constraints by passing the final exam.'],
+    body: [`has successfully completed the ${GAME_NAME} training`, 'on the Theory of Constraints by passing the final exam.'],
     score: `Final exam score: ${percentOf(c.correct, c.asked)}% (${c.correct} of ${c.asked} correct)`,
     passMark: `Pass mark: ${EXAM.passPercent}%`,
     date: `Awarded ${formatDate(c.at)}`,
     id: `Certificate ID ${c.id}`,
-    fine: 'TOC Factory is an independent training game. This is not an official certification from any Theory of Constraints organization.',
+    fine: `${GAME_NAME} is an independent training game. This is not an official certification from any Theory of Constraints organization.`,
   }
 }
 
