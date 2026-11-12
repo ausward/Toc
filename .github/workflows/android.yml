@@ -12,6 +12,7 @@ on:
   push:
     paths:
       - 'android/**'
+      - 'scripts/android-smoke.*'
       - 'capacitor.config.ts'
       - 'src/**'
       - 'public/**'
