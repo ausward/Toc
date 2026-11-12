@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:play": "tsc -b && vite build --mode play --outDir dist-play",
+    "dev:play": "vite --mode play",
     "lint": "oxlint",
     "test": "vitest run",
     "preview": "vite preview",
