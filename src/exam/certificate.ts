@@ -66,7 +66,7 @@ export function certificateText(c: CertificateRecord) {
   }
 }
 
-// A name for the saved file, such as TOC-Factory-certificate-sam-rivera.
+// A name for the saved file, such as TOC-Factory-certificate-sam-rivera (Factory-Fun-certificate-... in the Play edition).
 export function certificateFileName(name: string): string {
   const slug = cleanName(name)
     .toLowerCase()
@@ -75,5 +75,5 @@ export function certificateFileName(name: string): string {
     .replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
-  return `TOC-Factory-certificate${slug ? `-${slug}` : ''}`
+  return `${GAME_NAME.replace(/\s+/g, '-')}-certificate${slug ? `-${slug}` : ''}`
 }

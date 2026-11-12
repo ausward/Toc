@@ -5301,3 +5301,11 @@ p.exam-taught,
 .start-here p {
   margin: 0;
 }
+
+/* A slider is a touch target too: tall enough for a finger on a phone (Google Play's accessibility check
+   flags anything under 48dp). Layout only, on touch screens only. */
+@media (pointer: coarse) {
+  input[type='range'] {
+    min-height: 48px;
+  }
+}
