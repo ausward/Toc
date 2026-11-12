@@ -2,7 +2,7 @@
 // presses and window focus), then reports what passed. Run by scripts/android-smoke.sh in CI, on an emulator.
 import { execFileSync } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
-import { chromium } from 'playwright-core'
+import { _android as android } from 'playwright-core'
 
 const OUT = process.env.OUT ?? 'smoke-out'
 const PKG = process.env.PKG ?? 'com.tocfactory.game'
@@ -15,21 +15,10 @@ const check = (name, ok, detail = '') => {
 }
 const shot = (name) => writeFileSync(`${OUT}/${name}.png`, execFileSync('adb', ['exec-out', 'screencap', '-p'], { maxBuffer: 64 * 1024 * 1024 }))
 
-async function connect() {
-  let pid = ''
-  for (let i = 0; i < 20 && !pid; i++) {
-    pid = adb('shell', 'pidof', PKG).split(/\s+/)[0] ?? ''
-    if (!pid) await sleep(500)
-  }
-  if (!pid) throw new Error('the app is not running')
-  adb('forward', 'tcp:9222', `localabstract:webview_devtools_remote_${pid}`)
-  const browser = await chromium.connectOverCDP('http://127.0.0.1:9222')
-  let page
-  for (let i = 0; i < 20 && !page; i++) {
-    page = browser.contexts()[0]?.pages()[0]
-    if (!page) await sleep(500)
-  }
-  return { browser, page }
+// Playwright's Android support finds the app's WebView on the emulator and gives back a page to drive.
+async function attach(device) {
+  const webView = await device.webView({ pkg: PKG }, { timeout: 40000 })
+  return webView.page()
 }
 
 const focus = () => adb('shell', 'dumpsys', 'window').split('\n').filter((l) => /mCurrentFocus/.test(l)).join(' ')
@@ -39,7 +28,9 @@ const back = async () => {
 }
 
 try {
-  let { browser, page } = await connect()
+  const [device] = await android.devices()
+  if (!device) throw new Error('no emulator found')
+  let page = await attach(device)
   await page.getByText('Factory Fun').first().waitFor({ timeout: 20000 })
   check('app starts and shows the game', true)
   check('running inside the native app', await page.evaluate(() => Boolean(window.Capacitor?.isNativePlatform?.())))
@@ -106,11 +97,10 @@ try {
   check('closing the share sheet returns to the certificate with no error', (await page.locator('body').innerText()).includes('Certificate'))
 
   // Progress is kept when the app is closed and opened again.
-  await browser.close()
   adb('shell', 'am', 'force-stop', PKG)
   await sleep(1500)
   adb('shell', 'monkey', '-p', PKG, '-c', 'android.intent.category.LAUNCHER', '1')
-  ;({ browser, page } = await connect())
+  page = await attach(device)
   await page.getByText('Factory Fun').first().waitFor({ timeout: 20000 })
   check('nickname and certificate are still there after closing and reopening', (await page.locator('body').innerText()).includes('Sam') && (await page.evaluate((id) => localStorage.getItem(`toc-factory:exam:${id}`) !== null, learner)))
 
@@ -119,7 +109,7 @@ try {
   await sleep(2500)
   const alive = adb('shell', 'pidof', PKG).trim() !== ''
   check('back from the home screen closes the app', !alive)
-  await browser.close().catch(() => {})
+  await device.close().catch(() => {})
 } catch (error) {
   check('the run finished without an error', false, String(error?.stack ?? error).slice(0, 600))
   try { shot('failure') } catch { /* no screen to take */ }
