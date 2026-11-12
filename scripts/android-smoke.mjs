@@ -58,13 +58,15 @@ try {
 
   // The system back button steps out of each screen, and closes the app only from home.
   await back()
-  check('back leaves a level for the home screen', (await page.locator('body').innerText()).includes('Free play'))
+  const onHome = async () => (await page.locator('body').innerText()).includes('New here? Start here')
+  check('back leaves a level for the home screen', await onHome())
   for (const [button, word] of [[/Free play/, 'free play'], [/Loading lab/, 'loading lab'], [/Course guide/, 'course guide'], [/Exam and certificate/, 'exam']]) {
     await tap(page.getByRole('button', { name: button }))
     await sleep(900)
-    const there = !(await page.locator('body').innerText()).includes('Loading lab') || word === 'loading lab'
+    // The home screen's Start here card (no level is finished yet) tells home from every other screen.
+    const opened = !(await onHome())
     await back()
-    check(`back leaves ${word} for the home screen`, (await page.locator('body').innerText()).includes('Free play') && there)
+    check(`back leaves ${word} for the home screen`, opened && (await onHome()))
   }
 
   // The loading lab's explainer video, from inside the app's own files.
@@ -117,7 +119,13 @@ try {
   // Back from the home screen closes the app.
   await back()
   await sleep(2500)
-  const alive = adb('shell', 'pidof', PKG).trim() !== ''
+  // pidof exits with an error when there is no such process, which is what closing the app should leave.
+  let alive = true
+  try {
+    alive = adb('shell', 'pidof', PKG).trim() !== ''
+  } catch {
+    alive = false
+  }
   check('back from the home screen closes the app', !alive)
   await device.close().catch(() => {})
 } catch (error) {
