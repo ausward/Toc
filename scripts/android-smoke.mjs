@@ -21,6 +21,16 @@ async function attach(device) {
   return webView.page()
 }
 
+// A tap on an element, made in the page: Playwright's own click thinks an Android WebView's elements are
+// outside its viewport. The element is scrolled into view first, as a finger would need.
+const tap = async (locator) => {
+  await locator.waitFor({ timeout: 20000 })
+  await locator.evaluate((el) => {
+    el.scrollIntoView({ block: 'center' })
+    el.click()
+  })
+}
+
 const focus = () => adb('shell', 'dumpsys', 'window').split('\n').filter((l) => /mCurrentFocus/.test(l)).join(' ')
 const back = async () => {
   adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
@@ -40,8 +50,8 @@ try {
 
   await page.locator('#nickname').fill('Sam')
   await page.keyboard.press('Enter')
-  await page.getByRole('button', { name: /Start level 0.1/ }).click()
-  await page.getByRole('button', { name: /Start the shift/ }).click()
+  await tap(page.getByRole('button', { name: /Start level 0.1/ }))
+  await tap(page.getByRole('button', { name: /Start the shift/ }))
   await sleep(1500)
   await shot('level')
   check('a level opens and runs', (await page.locator('body').innerText()).includes('Shift clock'))
@@ -50,7 +60,7 @@ try {
   await back()
   check('back leaves a level for the home screen', (await page.locator('body').innerText()).includes('Free play'))
   for (const [button, word] of [[/Free play/, 'free play'], [/Loading lab/, 'loading lab'], [/Course guide/, 'course guide'], [/Exam and certificate/, 'exam']]) {
-    await page.getByRole('button', { name: button }).click()
+    await tap(page.getByRole('button', { name: button }))
     await sleep(900)
     const there = !(await page.locator('body').innerText()).includes('Loading lab') || word === 'loading lab'
     await back()
@@ -58,7 +68,7 @@ try {
   }
 
   // The loading lab's explainer video, from inside the app's own files.
-  await page.getByRole('button', { name: /Loading lab/ }).click()
+  await tap(page.getByRole('button', { name: /Loading lab/ }))
   await sleep(800)
   const video = await page.evaluate(async () => {
     const v = document.querySelector('video')
@@ -78,12 +88,12 @@ try {
     localStorage.setItem(`toc-factory:exam:${id}`, JSON.stringify({ seen: {}, attempts: [{ at, correct: 36, asked: 40, passed: true }], current: null, certificate: { name: 'Sam Example', id: 'TOCF-TEST-0001', at, correct: 36, asked: 40 }, name: 'Sam Example' }))
   }, learner)
   await page.reload()
-  await page.getByRole('button', { name: /Exam and certificate/ }).click()
-  await page.getByRole('button', { name: /View my certificate/ }).click()
+  await tap(page.getByRole('button', { name: /Exam and certificate/ }))
+  await tap(page.getByRole('button', { name: /View my certificate/ }))
   await page.getByRole('button', { name: /Save or share the PDF/ }).waitFor()
   await page.waitForFunction(() => ![...document.querySelectorAll('.exam-actions button')].some((b) => b.disabled), null, { timeout: 20000 })
   await shot('certificate')
-  await page.getByRole('button', { name: /Save or share the PDF/ }).click()
+  await tap(page.getByRole('button', { name: /Save or share the PDF/ }))
   let shareFocus = ''
   for (let i = 0; i < 20; i++) {
     await sleep(500)
