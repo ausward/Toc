@@ -209,6 +209,24 @@ button {
   color: var(--muted);
 }
 
+.home-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 20px;
+  padding: 12px 4px;
+  border-top: 2px solid var(--ink);
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.home-footer a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+
 .player-bar {
   display: flex;
   flex-wrap: wrap;

@@ -67,9 +67,9 @@ Answers (also in `docs/android-play-store.md`):
 - **Data safety:** collects no data, shares none. The app has no account and makes no network calls. (Android may
   back up the app's data to the user's own Google account; that is theirs, not collected by us.)
 - **Category:** Education.
-- **Privacy policy:** a public web address is required. Use the text in `docs/android-play-store.md` and
-  add a contact address that is not a personal or employer address. Any public page works, for example a
-  page on the game's GitHub Pages site once that is turned on.
+- **Privacy policy:** a public web address is required. Host `public/privacy.html`, the one policy for the web
+  game and both apps, and give the store that address. Any public page works, for example a page on the game's
+  GitHub Pages site once that is turned on.
 - **Store assets:** 512 px icon (`public/icon-512.png`), a 1024 by 500 feature graphic, at least 2 phone
   screenshots (take them from the debug APK; a tablet set helps), short description (80 characters), full
   description.

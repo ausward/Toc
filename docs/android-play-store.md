@@ -40,7 +40,7 @@ Not checked on a real phone (do this before the first upload, with the debug APK
    bundle. Never commit the keystore. In Play Console, use Play App Signing.
 3. **Confirm the app id** `com.tocfactory.game` (`capacitor.config.ts`, `android/app/build.gradle`). It cannot
    change after the first upload.
-4. **Host the privacy policy** below at a public address and give Play that address.
+4. **Host the privacy policy** (`public/privacy.html`) at a public address and give Play that address.
 5. **Store listing:** screenshots from a phone (and a tablet if offered), a 512 px icon (`public/icon-512.png`),
    a 1024 by 500 feature graphic, a short and a full description.
 
@@ -52,24 +52,10 @@ Not checked on a real phone (do this before the first upload, with the debug APK
 - Ads: none. Content rating: everyone (no violence, no user-to-user contact).
 - Category: Education.
 
-## Privacy policy (text to host)
+## Privacy policy
 
-> **TOC Factory privacy policy**
->
-> TOC Factory is a game that teaches the Theory of Constraints. It runs entirely on your device.
->
-> **What the app keeps.** Your nickname, your progress, your notes, your exam answers and results, and the name
-> you put on a certificate are saved on your device only. The app has no accounts and does not send this or
-> anything else to the developer or to anyone else. It has no advertising and no analytics.
->
-> **Sharing.** If you choose to save or share a certificate, the file goes where you send it, through Android's
-> own share sheet. The app does not see where.
->
-> **Backups.** Android may include the app's saved data in your Google account's backup, under your own control.
->
-> **Deleting your data.** Uninstalling the app, or clearing its storage in Android's settings, deletes
-> everything the app kept.
->
-> **Children.** The app is meant for ages 13 and over.
->
-> **Contact.** (add a contact address that is not a personal or employer address)
+The policy is `public/privacy.html`: one page for the web game (TOC Factory) and both apps (Factory Fun, on iOS and
+Android). Vite copies it into `dist/` and `dist-play/`, so the same file is served from the game's site and bundled
+inside the apps. Give Play the public address where it is hosted (`/privacy.html` on the site, or
+`/Toc/privacy.html` if Pages serves the project from a subpath). Edit that file rather than keeping a second copy
+of the text here.

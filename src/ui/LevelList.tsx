@@ -191,6 +191,12 @@ export function LevelList(props: LevelListProps) {
           </ol>
         </section>
       ))}
+      {!PLAY && (
+        <footer className="home-footer">
+          <a href="./privacy.html">Privacy policy</a>
+          <span>© 2026 William Ward. All rights reserved.</span>
+        </footer>
+      )}
     </div>
   )
 }
